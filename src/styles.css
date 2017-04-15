@@ -1,1 +1,29 @@
 /* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css?family=Press+Start+2P');
+
+.content,
+input,
+button[type="submit"] {
+	font-family: 'Press Start 2P';
+	font-size: 0.8em;
+}
+
+.btn-outline-primary {
+	border:1px solid;
+	border-color: #1E1E1E;
+	color: #1E1E1E;
+}
+
+input[type="text"],
+input[type="text"]:focus {
+	background-color:#3eb991;
+	border-color: #1E1E1E;
+	border:1px solid;
+}
+
+.container {
+	/*background-color: #fdfdfd;*/
+}
+body {
+	background-color:#3eb991;
+}

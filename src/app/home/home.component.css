@@ -1,0 +1,14 @@
+.content {
+	margin: 0 30vh 0 30vh;
+}
+
+input[type="text"]{
+	margin-top: 0.6vh;
+	height: 4em;
+}
+
+button[type=submit] {
+	margin-top: 3vh; 
+	height: 10vh;
+}
+
