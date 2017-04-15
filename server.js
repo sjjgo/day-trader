@@ -6,4 +6,14 @@ const app = express();
 app.use(express.static(__dirname + '/dist'));
 // Start the app by listening on the default
 // Heroku port
-app.listen(process.env.PORT || 8080);
+var server = app.listen(process.env.PORT || 8080, function (){
+	var port = server.address().port;
+	console.log("App now running on port ", port);
+});
+
+app.get("/contacts/:name", function (request, response){
+	res.send(req.params);
+});
+app.post("/post/:name", function (request, response){
+	res.send(req.params);
+});
