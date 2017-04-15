@@ -1,6 +1,9 @@
 // server.js
 const express = require('express');
+var bodyParser = require("body-parser");
 const app = express();
+// for parsing application json
+app.use(bodyParser.json());
 // Run the app by serving the static files
 // in the dist directory
 app.use(express.static(__dirname + '/dist'));
@@ -15,5 +18,5 @@ app.get("/contacts/:name", function (request, response){
 	response.send(request.params);
 });
 app.post("/post/:name", function (request, response){
-	response.send(request.body);
+	response.status(200).json(request.body);
 });
