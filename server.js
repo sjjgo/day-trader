@@ -12,8 +12,8 @@ var server = app.listen(process.env.PORT || 8080, function (){
 });
 
 app.get("/contacts/:name", function (request, response){
-	res.send(req.params);
+	response.send(request.params);
 });
 app.post("/post/:name", function (request, response){
-	res.send(req.params);
+	response.send(request.body);
 });
