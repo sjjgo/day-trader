@@ -16,14 +16,23 @@ button[type="submit"] {
 
 input[type="text"],
 input[type="text"]:focus {
-	background-color:#3eb991;
+/*	background-color:#3eb991;*/
 	border-color: #1E1E1E;
 	border:1px solid;
+
+	background-color:#FFF;
 }
 
 .container {
 	/*background-color: #fdfdfd;*/
 }
 body {
-	background-color:#3eb991;
+/*	background-color:#3eb991;*/
+
+background-color:#FFF;
+}
+
+th, td, .table thead th{
+	border: 1px solid #1E1E1E;
+	vertical-align: middle;
 }

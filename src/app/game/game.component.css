@@ -9,3 +9,12 @@ button[type=submit] {
 form {
 	margin-top: 0.6vh;
 }
+
+
+hr {
+	width: 66.7vw;
+}
+
+.header {
+	margin-bottom: 30px;
+}

@@ -1,17 +1,20 @@
 import { Component, OnInit } from '@angular/core';
+import { GameCodeService } from './home.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
+  providers: [GameCodeService]
 })
 export class HomeComponent implements OnInit {
-
-	content = "Home Page";
-
-  constructor() { }
+	
+	public validated: String;
+  
+  constructor(private gameCodeService: GameCodeService) { }
 
   ngOnInit() {
+  	this.validated = this.gameCodeService.validate();
   }
 
 }

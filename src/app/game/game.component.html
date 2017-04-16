@@ -1,24 +1,55 @@
 <div class="container">
-	<h1>Game: Round {{round}}</h1><hr>
-	<div class="row">
-		<div class="col-5">
-			<label for="cur-balance">Current Balance: </label>
-			<span>{{balance}}</span>
-			<form>
+	<div class="header">
+		<h1>Game: Round {{round}}</h1><hr>
+	</div>
+	<div class="body">
+		<div class="row">
+			<div class="col-4">
+				<label for="cur-balance">Current Balance: </label>
+				<span>{{balance}}</span>
 				<div class="form-group">
-				   <label for="ind-investment">Individual investment</label>
-				   <input type="text" class="form-control" value=0 placeholder="Enter amount">
+				 	<label for="ind-investment">Individual investment</label>
+					<input #box1 (keyup)="validate(box1.value, 1)" type="text" class="form-control" placeholder="Enter amount" >
+					<span *ngIf="error != ''">{{ error }}</span>
 				</div>
+
 				<div class="form-group">
 				   <label for="grp-investment">Group investment</label>
-				   <input type="text" class="form-control" value=0 placeholder="Enter amount">
+				   <input #box2 (keyup)=0 type="text" class="form-control" placeholder="Enter amount">
 				</div>
-					<button type="submit" class="btn btn-outline-primary btn-block" id="submit-btn" routerLink="/game" disabled>Go</button>
-			</form>
-		</div>
-		<div class="col-7">
-			<h1>A very big table</h1>
+				<button type="submit" class="btn btn-outline-primary btn-block" id="submit-btn" 
+				routerLink="/result" [attr.disabled]="disabled ? 'true' : null">Go</button>
+			</div>
+			<div class="col-8">
+				<table class="table table-bordered table-hover">
+				  <thead>
+				    <tr>
+				      <th rowspan="2">Player</th>
+				      <th colspan="2">Investment</th>
+				      <th colspan="2">Payoff</th>
+				      <th rowspan="2">Profit</th>
+				      <th rowspan="2">Total</th>
+				    </tr>
+				    <tr>
+							<th>Individual</th>
+							<th>Group</th>
+							<th>Individual</th>
+							<th>Group</th>
+				    </tr>
+				  </thead>
+				  <tbody>
+				    <tr *ngFor="let row of table">
+				      <th scope="row">{{row.player}}</th>
+				      <td>{{row.indInv}}</td>
+				      <td>{{row.grpInv}}</td>
+				      <td>{{row.indPayoff}}</td>
+				      <td>{{row.grpPayoff}}</td>
+				      <td>{{row.profit}}</td>
+				      <td>{{row.total}}</td>
+				    </tr>
+				  </tbody>
+				</table>
+			</div>
 		</div>
 	</div>
-
 </div>
