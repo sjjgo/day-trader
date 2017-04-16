@@ -21,9 +21,6 @@ export class GameCodeService {
 		                .catch(this.handleError);
 	}
 
-
-
-
 	private extractData(res: Response) {
 		let body = res.json();
 		console.log(body);
