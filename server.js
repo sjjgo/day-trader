@@ -5,6 +5,8 @@ var mongodb = require('mongodb');
 var Pusher = require('pusher');
 const app = express();
 
+const GAMECODES_COLLECTION = "gameCodes";
+
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/dist'));
 
@@ -36,7 +38,7 @@ mongodb.MongoClient.connect(process.env.MONGODB_URI, function (err, database){
 // GAME API BELOW
 
 // Generix error handler used by all endpoints
-function handleErrors(res, reason, message, code) {
+function handleError(res, reason, message, code) {
 	console.log("ERROR: " + reason);
 	res.status(code || 500).json({"error" : message});
 };
@@ -46,7 +48,20 @@ function handleErrors(res, reason, message, code) {
  */
 
 app.post("/api/game-codes/validate", function(req, res) {
-	//
+	var gamecode = req.body;
+
+	if (!req.body.gamecode) {
+		handleError(res, "Invalid game code", "Must provide a game code", 400);
+	}
+
+	db.collection(GAMECODES_COLLECTION).find({"gamecode" : req.body.gamecode}).toArray(function(err,docs){
+		if (err) {
+			handleError(res, err.message, "Failed to retrieve game code");
+		}
+		else {
+			res.status(201).json(doc.ops[0]);
+		}
+	})
 });
 
 /* "/api/pusher/auth"
