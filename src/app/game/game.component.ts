@@ -20,12 +20,12 @@ export class GameComponent implements OnInit {
 		}
 	];
 
-	private indInv: number;
-	private grpInv: number;
-	private disabled : boolean = false;
-	private error: string = "";
-	private round = "1";
-	private balance = 40;
+	public indInv: number;
+	public grpInv: number;
+	public disabled : boolean = false;
+	public error: string = "";
+	public round = "1";
+	public balance = 40;
 
   constructor() { }
 

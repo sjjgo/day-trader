@@ -7,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ResultComponent implements OnInit {
 	result = "Results page";
+	table = [];
 	
   constructor() { }
 
