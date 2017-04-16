@@ -48,6 +48,9 @@ function handleError(res, reason, message, code) {
  */
 
 app.post("/api/game-codes/validate", function(req, res) {
+	res.status(200).json(req.body);
+	process.exit(1);
+	
 	if (!req.body.gamecode) {
 		res.status(400).json(req.body);
 		handleError(res, "Invalid game code", "Must provide a game code", 400);
