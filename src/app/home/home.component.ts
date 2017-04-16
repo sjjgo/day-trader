@@ -9,7 +9,7 @@ import { GameCodeService } from './home.service';
 })
 export class HomeComponent implements OnInit {
 	
-	public validated: String;
+	public validated: string;
   
   constructor(private gameCodeService: GameCodeService) { }
 
