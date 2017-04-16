@@ -48,22 +48,19 @@ function handleError(res, reason, message, code) {
  */
 
 app.post("/api/game-codes/validate", function(req, res) {
-	res.status(200).json(req.body);
-	process.exit(1);
-	
 	if (!req.body.gamecode) {
 		res.status(400).json(req.body);
 		handleError(res, "Invalid game code", "Must provide a game code", 400);
 	}
 
-	db.collection(GAMECODES_COLLECTION).find({ game_code : req.body.gamecode}).toArray(function(err,docs){
+	db.collection(GAMECODES_COLLECTION).findOne({game_code : req.body.gamecode}, function(err, docs){
 		if (err) {
-			handleError(res, err.message, "Failed to retrieve game code");
+			handleError(res, err.message, "Failed to retrieve game code", 500);
 		}
 		else {
 			res.status(201).json(doc.ops[0]);
 		}
-	})
+	});
 });
 
 /* "/api/pusher/auth"
