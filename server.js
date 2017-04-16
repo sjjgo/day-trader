@@ -53,7 +53,7 @@ app.post("/api/game-codes/validate", function(req, res) {
 		handleError(res, "Invalid game code", "Must provide a game code", 400);
 	}
 
-	db.collection(GAMECODES_COLLECTION).findOne({game_code : req.body.gamecode}, function(err, docs){
+	db.collection(GAMECODES_COLLECTION).find({game_code : req.body.gamecode).toArray(function(err, doc){
 		if (err) {
 			handleError(res, err.message, "Failed to retrieve game code", 500);
 		}
