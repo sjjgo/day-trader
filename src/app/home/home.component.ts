@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
   validate(gamecode: string) {
   	this.gameCodeService.validate(gamecode)
   												.subscribe(
-  													valid => this.validated = JSON.stringify(valid),
+  													valid => this.validated = valid.toString(),
   													error => this.validated = "false"
   													);
   }
