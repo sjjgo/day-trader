@@ -16,9 +16,10 @@ export class GameCodeService {
 		let headers = new Headers({ 'Content-Type': 'application/json' });
 		let options = new RequestOptions({ headers: headers });
 
-		return this.http.post(this.validationUrl, { "gamecode" : gamecode }, options)
-		                .map(this.extractData)
-		                .catch(this.handleError);
+		return this.http
+			.post(this.validationUrl, { "gamecode" : gamecode }, options)
+		  .map(this.extractData)
+		  .catch(this.handleError);
 	}
 
 	private extractData(res: Response) {
