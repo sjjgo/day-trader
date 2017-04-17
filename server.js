@@ -58,7 +58,7 @@ app.post("/api/game-codes/validate", function(req, res) {
 		{ returnOriginal: false },
 		function(err, result){
 			if (err) {
-				handleError(res, err.message, "Failed to retrieve game code", 500);
+				handleError(res, err.message,  err.message, 500);
 			}
 			else {
 				res.status(201).json(result.value);
