@@ -23,6 +23,9 @@ export class HomeComponent{
   }
 
   validate(gamecode: string) {
+  	if (!gamecode) {
+  		return;
+  	}
   	this.gameCodeService
   		.validate(gamecode)
 			.subscribe(
