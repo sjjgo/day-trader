@@ -53,7 +53,7 @@ app.post("/api/game-codes/validate", function(req, res) {
 	}
 
 	db.collection(GAMECODES_COLLECTION).findOneAndUpdate(
-		{ game_code : req.body.gamecode },
+		{ game_code: req.body.gamecode },
 		{ $inc: {activated_count: 1} },
 		{ returnOriginal: false },
 		function(err, result){

@@ -7,22 +7,28 @@ import { GameCodeService } from './gamecode.service';
   styleUrls: ['./home.component.css'],
   providers: [GameCodeService]
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent{
 	
-	public validated: string;
+	public info: string;
   
   constructor(private gameCodeService: GameCodeService) { }
 
-  ngOnInit() {
-  	this.validate("test-game-code");
+  isValid(gameCodeDetails) {
+  	if (gameCodeDetails.isFalse == 1 || gameCodeDetails.activated_count > 4) {
+  		this.info = "Invalid game code";
+  	}
+  	else {
+  		this.info = "successful!";
+  	}
   }
 
   validate(gamecode: string) {
-  	this.gameCodeService.validate(gamecode)
-  												.subscribe(
-  													valid => this.validated = valid.toString(),
-  													error => this.validated = "false"
-  													);
+  	this.gameCodeService
+  		.validate(gamecode)
+			.subscribe(
+				valid => this.isValid(valid),
+				error => this.isValid({isFalse: 1})
+				);
   }
 
 }
