@@ -52,7 +52,7 @@ app.post("/api/game-codes/validate", function(req, res) {
 		handleError(res, "Invalid game code", "Must provide a game code", 400);
 	}
 
-	db.collection(GAMECODES_COLLECTION).findOneAndUpdate({ 
+	db.collection(GAMECODES_COLLECTION).findOneAndUpdate(
 		{ game_code : req.body.gamecode },
 		{ $inc: {activated_count: 1} },
 		{ returnOriginal: false },
@@ -61,10 +61,9 @@ app.post("/api/game-codes/validate", function(req, res) {
 				handleError(res, err.message, "Failed to retrieve game code", 500);
 			}
 			else {
-				res.status(201).json(result);
+				res.status(201).json(result.value);
 			}
-		}
-	});
+		});
 });
 
 /* "/api/pusher/auth"
