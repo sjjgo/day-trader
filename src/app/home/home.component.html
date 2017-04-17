@@ -4,8 +4,8 @@
 			<label for="game-code">Input Game Code</label>
 			<div class="input-group" id="game-code-input">
 			  <input #box type="text" class="form-control"  placeholder="Enter Game Code">
-			  <p *ngIf="info">{{info}}</p>
 			</div>
+			<p *ngIf="info">{{info}}</p>
 		</div>
 		<button type="submit" class="btn btn-outline-primary btn-block" id="submit-btn" (click)="validate(box.value)"> Verify</button>
 	</div>
