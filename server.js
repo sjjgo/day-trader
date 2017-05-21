@@ -80,7 +80,10 @@ app.post("/api/game-codes/validate", function(req, res) {
 			else {
 				var response = {isFalse : 1};
 				// If game code exists
-				if (result.value) {
+				if (result.value.activated_count > NUM_OF_PLAYERS) {
+					res.status(201).json(response);
+				}
+				else if (result.value) {
 					// Creater user-channel association (PK)
 					db.collection(USERS_COLLECTION).insertOne({
 						username : req.body.username,
@@ -247,6 +250,14 @@ app.post("/api/game/:channel_id/:round", function(req, res) {
 		}
 	});
 });
+
+/**
+ * "/api/admin/reset"
+ * GET: reset test game data
+ */
+app.get("/api/admin/reset", function(req, res) {
+	
+})
 
 /* "/api/rounds/channel/:channel_id"
  * 	GET: find game data for all rounds, for all users by channel

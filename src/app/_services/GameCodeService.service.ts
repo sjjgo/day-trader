@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Headers, RequestOptions } from '@angular/http';	
+import * as GLOBAL from '../globals';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
@@ -8,7 +9,8 @@ import 'rxjs/add/operator/map';
 
 @Injectable()
 export class GameCodeService {
-	private validationUrl = "https://damp-plains-42803.herokuapp.com/api/game-codes/validate"; 
+	private hostname = GLOBAL.hostname;
+	private validationUrl = this.hostname + "/api/game-codes/validate"; 
 
 	constructor (private http: Http) {}
 

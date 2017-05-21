@@ -41,3 +41,7 @@ th, td, .table thead th{
 	border: 1px solid #1E1E1E;
 	vertical-align: middle;
 }
+
+.has-error {
+	color: red;
+}

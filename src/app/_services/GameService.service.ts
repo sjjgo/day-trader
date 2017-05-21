@@ -5,10 +5,11 @@ import { Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
+import * as GLOBAL from '../globals';
 
 @Injectable()
 export class GameService {
-	private hostname = "https://damp-plains-42803.herokuapp.com"; 
+	private hostname = GLOBAL.hostname; 
 
 	constructor (private http: Http) {}
 

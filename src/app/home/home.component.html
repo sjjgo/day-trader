@@ -12,7 +12,7 @@
 			<div class="input-group" id="game-code-input">
 			  <input [ngModel]="gameCode" (ngModelChange)="gameCodeChange($event)" type="text" class="form-control"  placeholder="Enter Game Code">
 			</div>
-			<p *ngIf="info" style="color: red">{{ info }}</p>
+			<p *ngIf="info" class="has-error">{{ info }}</p>
 
 		</div>
 		<button type="submit" class="btn btn-outline-primary btn-block" id="submit-btn" (click)="validate()"> Verify</button>

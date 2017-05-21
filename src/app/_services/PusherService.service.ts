@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { UserService } from './UserService.service';
 import { Http, Response } from '@angular/http';
 import { Headers, RequestOptions } from '@angular/http';	
+import * as GLOBAL from '../globals';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
@@ -14,7 +15,7 @@ export class PusherService{
 	private channel_id;
 	private channel;
 	private user;
-	private hostname = 'https://damp-plains-42803.herokuapp.com';
+	private hostname = GLOBAL.hostname;
 
 	constructor(private userService: UserService, private http: Http) {
 		this.user = userService.getUser()
