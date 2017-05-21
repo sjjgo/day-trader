@@ -14,12 +14,13 @@ export class HomeComponent{
 	public info: string;
   public username: string;
   public gameCode : string;
+  private NUMBER_OF_PLAYERS = 2;
   
   constructor(private gameCodeService: GameCodeService, private router: Router, private user : UserService) { }
 
   isValid(gameCodeDetails) {
   	if (gameCodeDetails.isFalse == 1 
-      // || gameCodeDetails.activated_count > 4
+      || gameCodeDetails.activated_count >= this.NUMBER_OF_PLAYERS
       ) {
   		this.info = "Invalid game code";
   	}
