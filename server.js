@@ -256,8 +256,61 @@ app.post("/api/game/:channel_id/:round", function(req, res) {
  * GET: reset test game data
  */
 app.get("/api/admin/reset", function(req, res) {
-	
-})
+	var games_body = {
+		"round_1": {
+		     "submitted_count": 0,
+		     "players": []
+		 },
+		 "round_2": {
+		     "submitted_count": 0,
+		     "players": []
+		 },
+		 "round_3": {
+		     "submitted_count": 0,
+		     "players": []
+		 },
+		 "round_4": {
+		     "submitted_count": 0,
+		     "players": []
+		 },
+		 "round_5": {
+		     "submitted_count": 0,
+		     "players": []
+		 }
+	}
+	var bumblebee_icecream_a55hv = Object.assign({channel_id: 'bumblebee-icecream-a55hv'}, games_body);
+	var fighter_pomade_htg52 = Object.assign({channel_id : 'fighter-pomade-htg52'}, games_body); 
+
+	db.collection(CHANNELS_COLLECTION).findOneAndUpdate(
+		{ channel_id: 'bumblebee-icecream-a55hv' },
+		{ $set : {users: []} }
+	);
+	db.collection(GAMECODES_COLLECTION).findOneAndUpdate(
+		{ channel_id: 'bumblebee-icecream-a55hv' },
+		{ $set : {activated_count:0} }
+	);
+
+	db.collection(GAMES_COLLECTION).findOneAndReplace(
+		{channel_id: 'bumblebee-icecream-a55hv'},
+		{bumblebee_icecream_a55hv}
+	);
+
+	db.collection(CHANNELS_COLLECTION).findOneAndUpdate(
+		{ channel_id: 'fighter-pomade-htg52' },
+		{ $set : {users: []} }
+	);
+	db.collection(GAMECODES_COLLECTION).findOneAndUpdate(
+		{ channel_id: 'fighter-pomade-htg52' },
+		{ $set : {activated_count:0} }
+	);
+
+	db.collection(GAMES_COLLECTION).findOneAndReplace(
+		{channel_id: 'fighter-pomade-htg52'},
+		{fighter_pomade_htg52}
+	);
+
+	res.send('all ok!');
+});
 
 /* "/api/rounds/channel/:channel_id"
  * 	GET: find game data for all rounds, for all users by channel
