@@ -292,7 +292,7 @@ app.get("/api/admin/reset", function(req, res) {
 
 	db.collection(GAMES_COLLECTION).findOneAndReplace(
 		{channel_id: 'bumblebee-icecream-a55hv'},
-		{bumblebee_icecream_a55hv}
+		bumblebee_icecream_a55hv
 	);
 
 	db.collection(CHANNELS_COLLECTION).findOneAndUpdate(
@@ -306,9 +306,9 @@ app.get("/api/admin/reset", function(req, res) {
 
 	db.collection(GAMES_COLLECTION).findOneAndReplace(
 		{channel_id: 'fighter-pomade-htg52'},
-		{fighter_pomade_htg52}
+		fighter_pomade_htg52
 	);
-
+	console.log(bumblebee_icecream_a55hv);
 	res.send('all ok!');
 });
 
