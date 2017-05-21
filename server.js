@@ -64,7 +64,7 @@ function handleError(res, reason, message, code) {
  * 	POST: validates game code
  */
 app.post("/api/game-codes/validate", function(req, res) {
-	console.log("game code validation request");
+	// console.log("game code validation request");
 	if (!req.body.gamecode) {
 		handleError(res, "Invalid game code", "Must provide a game code", 400);
 	}
@@ -122,7 +122,7 @@ app.post("/api/pusher/auth", function(req, res) {
 		user_id: user_id
 	};
 	var auth = pusher.authenticate(socketId, channel, presenceData);
-	console.log("Pusher authentication");
+	// console.log("Pusher authentication");
 	res.status(200).send(auth);
 });
 /* "/api/ready"
@@ -165,7 +165,7 @@ app.get("/api/ready/:channel_id", function(req, res) {
 				var response = {
 					users: doc.users
 				}
-				console.log(doc.users);
+				// console.log(doc.users);
 				res.json(response);
 			}
 		});
@@ -209,7 +209,7 @@ app.post("/api/game/:channel_id/:round", function(req, res) {
 				ind: ind_invstmnt,
 				grp: grp_invstmnt
 			});
-			console.log('player saved!');
+			// console.log('player saved!');
 			// Change back to 4
 			if (r.value[round].submitted_count == NUM_OF_PLAYERS) {
 				// compute group payoff
@@ -220,7 +220,7 @@ app.post("/api/game/:channel_id/:round", function(req, res) {
 					pusher.trigger('presence-' + channel_id, 'round-completed', {
 						total_grp_investment : total_grp_investment
 					});
-					console.log("Round-completed triggered");
+					// console.log("Round-completed triggered");
 				}, 250);
 			}
 			res.status(200).send();
@@ -239,7 +239,7 @@ app.post("/api/game/:channel_id/:round", function(req, res) {
 							handleError(res, err.message,  err.message, 500);
 						}
 						else {
-							console.log(r.value.round_1);
+							// console.log(r.value.round_1);
 						}
 					});
 			}
