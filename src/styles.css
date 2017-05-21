@@ -3,9 +3,14 @@
 
 .content,
 input,
-button[type="submit"] {
+button {
 	font-family: 'Press Start 2P';
 	font-size: 0.8em;
+}
+
+button:active {
+	box-shadow: 0 5px #666;
+	transform: translateY(4px);
 }
 
 .btn-outline-primary {

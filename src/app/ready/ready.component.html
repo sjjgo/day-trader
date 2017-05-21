@@ -1,7 +1,9 @@
 
 <div class="content">
 	<instructions></instructions>
-	<h1>Waiting for players...</h1>
+	<h1>Players</h1>
+	{{username}}
+
 	<table class="table">
 		<thead>
 			<tr>
@@ -10,11 +12,14 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<td>Ryan</td>
-				<td>This should be where the pushe rmagic begins</td>
-			</tr>
+				<tr *ngFor="let member of members">
+					<td *ngIf="!member.info.ready">{{ member.info.username }}</td>
+					<td *ngIf="!member.info.ready">Let's Go!</td>
+					<td *ngIf="member.info.ready" class="is-ready">{{ member.info.username }}</td>
+					<td *ngIf="member.info.ready" class="is-ready">Let's Go!</td>
+				</tr>
 		</tbody>
 	</table>
-	<button class="btn btn-outline-primary btn-block" routerLink="/game">Next</button>
+	<button *ngIf="ready==false" (click)=readyUp() class="btn btn-outline-primary btn-block">Ready</button>
+	<button *ngIf="ready" class="btn btn-outline-primary btn-block" disabled>Waiting for other players...</button>
 </div>

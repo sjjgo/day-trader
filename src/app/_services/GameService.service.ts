@@ -7,25 +7,31 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
 @Injectable()
-export class GameCodeService {
-	private validationUrl = "/api/game-codes/validate"; 
+export class GameService {
+	private hostname = "https://damp-plains-42803.herokuapp.com/"; 
 
 	constructor (private http: Http) {}
 
-	validate(gamecode: string): Observable<object> {
+	saveResults(user_id, ind_investment, grp_investment, channel_id, round): Observable<object> {
+		var r = round + 1;
+		var url = "/api/game/" + channel_id + '/' + r;
 		let headers = new Headers({ 'Content-Type': 'application/json' });
 		let options = new RequestOptions({ headers: headers });
-
+		let body = {
+			"ind" : ind_investment,
+			"grp" : grp_investment,
+			"user_id" : user_id
+		};
+		console.log('fired');
 		return this.http
-			.post(this.validationUrl, { "gamecode" : gamecode }, options)
-		  .map(this.extractData)
+			.post(this.hostname + url, body, options)
+		  .map(function() {return {value:true}})
 		  .catch(this.handleError);
 	}
 
 	private extractData(res: Response) {
 		let body = res.json();
-		console.log(body);
-		return body.data || { };
+		return body || {};
 	}
 
 	private handleError(error: Response | any) {

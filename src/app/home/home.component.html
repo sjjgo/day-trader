@@ -1,13 +1,21 @@
 	<div class="content">
-		<h1>Welcome!</h1><hr>
+		<h1>Welcome</h1><hr>
 		<div class="form-group">
+			<h5 *ngIf="username">Hello {{ username }}</h5>
+			<label for="game-code">Username</label>
+			<div class="input-group" id="game-code-input">
+			  <input [ngModel]="username" (ngModelChange)="usernameChange($event)" type="text" class="form-control"  placeholder="Enter Username">
+			</div>
+
+
 			<label for="game-code">Input Game Code</label>
 			<div class="input-group" id="game-code-input">
-			  <input #box type="text" class="form-control"  placeholder="Enter Game Code">
+			  <input [ngModel]="gameCode" (ngModelChange)="gameCodeChange($event)" type="text" class="form-control"  placeholder="Enter Game Code">
 			</div>
-			<p *ngIf="info">{{info}}</p>
+			<p *ngIf="info" style="color: red">{{ info }}</p>
+
 		</div>
-		<button type="submit" class="btn btn-outline-primary btn-block" id="submit-btn" (click)="validate(box.value)"> Verify</button>
+		<button type="submit" class="btn btn-outline-primary btn-block" id="submit-btn" (click)="validate()"> Verify</button>
 	</div>
 	
 
