@@ -14,7 +14,7 @@ export class PusherService{
 	private channel_id;
 	private channel;
 	private user;
-	private hostname = 'https://damp-plains-42803.herokuapp.com/';
+	private hostname = 'https://damp-plains-42803.herokuapp.com';
 
 	constructor(private userService: UserService, private http: Http) {
 		this.user = userService.getUser()
