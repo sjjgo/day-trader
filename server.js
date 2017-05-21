@@ -242,10 +242,11 @@ app.post("/api/game/:channel_id/:round", function(req, res) {
 							// console.log(r.value.round_1);
 						}
 					});
+				if (reqRound == 5 && ) {
+					pusher.trigger('presence-' + channel_id, 'game-over', {});
+				}
 			}
-			if (reqRound == 4) {
-				pusher.trigger('presence-' + channel_id, 'game-over', {})
-			}
+		
 		}
 	});
 });
