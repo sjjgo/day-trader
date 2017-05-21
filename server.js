@@ -31,7 +31,7 @@ var pusher = new Pusher({
   key: '8ec8f5164e15f7cbc5a0',
   secret: 'b89adf8f37a75b4d0c3e',
   cluster: 'eu',
-  encrypted: false
+  encrypted: true
 });
 
 
