@@ -8,7 +8,7 @@ import 'rxjs/add/operator/map';
 
 @Injectable()
 export class GameService {
-	private hostname = "https://damp-plains-42803.herokuapp.com/"; 
+	private hostname = "https://damp-plains-42803.herokuapp.com"; 
 
 	constructor (private http: Http) {}
 
