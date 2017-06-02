@@ -19,5 +19,13 @@ export class ParamsService {
 		return JSON.parse(localStorage.getItem("channel"));
 	}
 
+	public saveTables(tables) {
+		localStorage.setItem("tables", JSON.stringify(tables));
+	}
+
+	public getTables() {
+		return JSON.parse(localStorage.getItem("tables")); 
+	}
+
 
 }

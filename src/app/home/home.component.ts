@@ -22,7 +22,7 @@ export class HomeComponent{
   		this.info = "Invalid game code";
   	}
   	else {
-      console.log(gameCodeDetails);
+      // console.log(gameCodeDetails);
       this.user.save(this.username, gameCodeDetails.user_id, gameCodeDetails.channel_id);
   		this.router.navigateByUrl('/ready');
   	}

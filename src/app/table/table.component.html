@@ -1,0 +1,33 @@
+<table *ngIf="round!=0" class="table table-bordered table-hover">
+  <thead>
+    <tr>
+      <th rowspan="2">Player</th>
+      <th colspan="2">Investment</th>
+      <th colspan="2">Payoff</th>
+      <th rowspan="2">Profit</th>
+      <th rowspan="2">Total</th>
+    </tr>
+    <tr>
+			<th>Individual</th>
+			<th>Group</th>
+			<th>Individual</th>
+			<th>Group</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let member of tables[currentTable]">
+      <th scope="row">{{member.info.username}}</th>
+      <td>{{member.info.ind}}</td>
+      <td>{{member.info.grp}}</td>
+			<td>{{member.info.ind_payoff}}</td>
+			<td>{{member.info.grp_payoff}}</td>
+			<td>{{member.info.profit}}</td>
+			<td>{{member.info.total}}</td>
+    </tr>
+  </tbody>
+</table>
+<div data-toggle="buttons">
+  <label  *ngFor="let table of tables; let i = index" (click)="switchTable(i)" class="btn-group" class="btn btn-primary" >
+    <input type="radio" name="options" id="option1" autocomplete="off"> {{ i+1 }}
+  </label>
+</div>

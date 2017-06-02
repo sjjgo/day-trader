@@ -12,3 +12,6 @@ button[type=submit] {
 	height: 10vh;
 }
 
+.input-group {
+	padding-bottom: 1vh;
+}

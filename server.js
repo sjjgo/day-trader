@@ -1,15 +1,19 @@
 // server.js
 const express = require('express');
 var bodyParser = require('body-parser');
+var faker = require('faker');
+var shortid = require('shortid');
 var mongodb = require('mongodb');
 var Pusher = require('pusher');
+
+
 const app = express();
 
 const GAMECODES_COLLECTION = "gameCodes";
 const USERS_COLLECTION = "users";
 const CHANNELS_COLLECTION = "channels";
 const GAMES_COLLECTION = "games";
-const NUM_OF_PLAYERS = 2;
+const NUM_OF_PLAYERS = 4;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -183,8 +187,8 @@ app.post("/api/game/:channel_id/:round", function(req, res) {
 	var reqRound = req.params.round;
 	var round = "round_" + req.params.round;
 	var user_id = req.body.user_id;
-	var ind_invstmnt = req.body.ind;
-	var grp_invstmnt = req.body.grp;
+	var ind_invstmnt = (req.body.ind == "") ? 0 : req.body.ind;
+	var grp_invstmnt = (req.body.grp == "") ? 0 : req.body.grp;
 	var total_grp_investment = 0;
 	var submitted_count = round + ".submitted_count";
 	var players = round + ".players";
@@ -229,8 +233,9 @@ app.post("/api/game/:channel_id/:round", function(req, res) {
 			res.status(200).send();
 			// Change back to 4
 			if (r.value[round].submitted_count == NUM_OF_PLAYERS) {
+				// Grp payoff = sum of grp investments
 				for(var i = 0; i < r.value[round].players.length; i++) {
-					r.value[round].players[i].grp_payoff = total_grp_investment - Number(r.value[round].players[i].grp_invstmnt);
+					r.value[round].players[i].grp_payoff = total_grp_investment;
 				}
 				players_update[players] = r.value[round].players;
 				db.collection(GAMES_COLLECTION).findOneAndUpdate(
@@ -255,62 +260,125 @@ app.post("/api/game/:channel_id/:round", function(req, res) {
  * "/api/admin/reset"
  * GET: reset test game data
  */
-app.get("/api/admin/reset", function(req, res) {
-	var games_body = {
-		"round_1": {
-		     "submitted_count": 0,
-		     "players": []
-		 },
-		 "round_2": {
-		     "submitted_count": 0,
-		     "players": []
-		 },
-		 "round_3": {
-		     "submitted_count": 0,
-		     "players": []
-		 },
-		 "round_4": {
-		     "submitted_count": 0,
-		     "players": []
-		 },
-		 "round_5": {
-		     "submitted_count": 0,
-		     "players": []
-		 }
-	}
-	var bumblebee_icecream_a55hv = Object.assign({channel_id: 'bumblebee-icecream-a55hv'}, games_body);
-	var fighter_pomade_htg52 = Object.assign({channel_id : 'fighter-pomade-htg52'}, games_body); 
+// app.get("/api/admin/reset", function(req, res) {
+// 	var games_body = {
+// 		"round_1": {
+// 		     "submitted_count": 0,
+// 		     "players": []
+// 		 },
+// 		 "round_2": {
+// 		     "submitted_count": 0,
+// 		     "players": []
+// 		 },
+// 		 "round_3": {
+// 		     "submitted_count": 0,
+// 		     "players": []
+// 		 },
+// 		 "round_4": {
+// 		     "submitted_count": 0,
+// 		     "players": []
+// 		 },
+// 		 "round_5": {
+// 		     "submitted_count": 0,
+// 		     "players": []
+// 		 }
+// 	}
+// 	var bumblebee_icecream_a55hv = Object.assign({channel_id: 'bumblebee-icecream-a55hv'}, games_body);
+// 	var fighter_pomade_htg52 = Object.assign({channel_id : 'fighter-pomade-htg52'}, games_body); 
 
-	db.collection(CHANNELS_COLLECTION).findOneAndUpdate(
-		{ channel_id: 'bumblebee-icecream-a55hv' },
-		{ $set : {users: []} }
-	);
-	db.collection(GAMECODES_COLLECTION).findOneAndUpdate(
-		{ channel_id: 'bumblebee-icecream-a55hv' },
-		{ $set : {activated_count:0} }
-	);
+// 	db.collection(CHANNELS_COLLECTION).findOneAndUpdate(
+// 		{ channel_id: 'bumblebee-icecream-a55hv' },
+// 		{ $set : {users: []} }
+// 	);
+// 	db.collection(GAMECODES_COLLECTION).findOneAndUpdate(
+// 		{ channel_id: 'bumblebee-icecream-a55hv' },
+// 		{ $set : {activated_count:0} }
+// 	);
 
-	db.collection(GAMES_COLLECTION).findOneAndReplace(
-		{channel_id: 'bumblebee-icecream-a55hv'},
-		Object.assign({channel_id: 'bumblebee-icecream-a55hv'}, games_body)
-	);
+// 	db.collection(GAMES_COLLECTION).findOneAndReplace(
+// 		{channel_id: 'bumblebee-icecream-a55hv'},
+// 		Object.assign({channel_id: 'bumblebee-icecream-a55hv'}, games_body)
+// 	);
 
-	db.collection(CHANNELS_COLLECTION).findOneAndUpdate(
-		{ channel_id: 'fighter-pomade-htg52' },
-		{ $set : {users: []} }
-	);
-	db.collection(GAMECODES_COLLECTION).findOneAndUpdate(
-		{ channel_id: 'fighter-pomade-htg52' },
-		{ $set : {activated_count:0} }
-	);
+// 	db.collection(CHANNELS_COLLECTION).findOneAndUpdate(
+// 		{ channel_id: 'fighter-pomade-htg52' },
+// 		{ $set : {users: []} }
+// 	);
+// 	db.collection(GAMECODES_COLLECTION).findOneAndUpdate(
+// 		{ channel_id: 'fighter-pomade-htg52' },
+// 		{ $set : {activated_count:0} }
+// 	);
 
-	db.collection(GAMES_COLLECTION).findOneAndReplace(
-		{channel_id: 'fighter-pomade-htg52'},
-		Object.assign({channel_id : 'fighter-pomade-htg52'}, games_body)
-	);
-	console.log(Object.assign({channel_id : 'fighter-pomade-htg52'}, games_body));
-	res.send('all ok!');
-});
+// 	db.collection(GAMES_COLLECTION).findOneAndReplace(
+// 		{channel_id: 'fighter-pomade-htg52'},
+// 		Object.assign({channel_id : 'fighter-pomade-htg52'}, games_body)
+// 	);
+// 	// console.log(Object.assign({channel_id : 'fighter-pomade-htg52'}, games_body));
+// 	res.send('all ok!');
+// });
+
+/**
+ * "/admin/generate"
+ * GET: generates channels, gameCodes and games
+ */
+
+// app.get("/admin/generate", function(req,res) {
+
+// 	var games_body = {
+// 		"round_1": {
+// 		     "submitted_count": 0,
+// 		     "players": []
+// 		 },
+// 		 "round_2": {
+// 		     "submitted_count": 0,
+// 		     "players": []
+// 		 },
+// 		 "round_3": {
+// 		     "submitted_count": 0,
+// 		     "players": []
+// 		 },
+// 		 "round_4": {
+// 		     "submitted_count": 0,
+// 		     "players": []
+// 		 },
+// 		 "round_5": {
+// 		     "submitted_count": 0,
+// 		     "players": []
+// 		 }
+// 	}
+
+// 	var words = ['bumblebee', 'icecream',  'soldier', 'tree', 'birds', 'insect', 'laserbeam', 'robots', 'grizzly', 'roar', 'meticulous', 'panda', 'bear', 'patchy', 'hipster', 'cool',
+// 	'geek', 'jump', 'balance', 'mouse', 'mice', 'pasta', 'linguine', 'penne', 'crab', 'squid', 'angelfish',
+// 	 'waterfall', 'rainbows', 'unicorns', 'horse', 'goat', 'cow', 'computer', 'excellent', 'pretty', 'handsome', 'sexy',
+// 	 'beast', 'xmen', 'professor', 'xavier', 'arthur', 'merlin', 'lancelot', 'percival','gawain', 'geraint', 'luke',
+// 	 'skywalker', 'yoda', 'vader', 'anakin', 'obi-wan', 'kenobi', 'leia', 'han-solo', 'chewbacca', 'cookie', 'clone-trooper',
+// 	 'r2d2', 'boba-fett', 'jaba', 'storm-trooper', 'ahsoka', 'banana', 'pineapple', 'grapefruit', 'kamehameha', 'goku',
+// 	 'naruto', 'ice-ice', 'britney' 
+// 	] 
+// 	for(var i = 0; i < 16; i++) {
+// 		var gameCode = faker.random.arrayElement(words) + "-" + faker.random.arrayElement(words) + "-" + shortid.generate();
+// 		var channel_id = shortid.generate();
+
+// 		var gameCodeObj = {
+// 			game_code : gameCode,
+// 			activated_count : 0,
+// 			channel_id : channel_id
+// 		}
+
+// 		var channeObj = {
+// 			channel_id : channel_id,
+// 			users : []
+// 		}
+
+// 		var game = Object.assign({channel_id : channel_id}, games_body); 
+
+// 		db.collection(GAMECODES_COLLECTION).insert(gameCodeObj);
+// 		db.collection(CHANNELS_COLLECTION).insert(channeObj);
+// 		db.collection(GAMES_COLLECTION).insert(game);
+// 	}
+// 	res.send("it works!");
+// }); 
+
 
 /* "/api/rounds/channel/:channel_id"
  * 	GET: find game data for all rounds, for all users by channel

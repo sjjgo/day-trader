@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { TableComponent } from '../table/table.component';
+import { ParamsService } from '../_services/ParamsService.service';
 
 @Component({
   selector: 'app-end',
@@ -7,9 +9,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EndComponent implements OnInit {
 
-  constructor() { }
+	public tables;
+  constructor(private params: ParamsService) {}
 
   ngOnInit() {
+  	this.tables = this.params.getTables();
   }
 
 }

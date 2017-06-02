@@ -15,6 +15,7 @@ import { ResultComponent } from './result/result.component';
 import { InstructionComponent } from './instruction/instruction.component';
 import { ReadyComponent } from './ready/ready.component';
 import { EndComponent } from './end/end.component';
+import { TableComponent } from './table/table.component';
 
 
 
@@ -27,6 +28,7 @@ import { EndComponent } from './end/end.component';
     InstructionComponent,
     ReadyComponent,
     EndComponent,
+    TableComponent,
   ],
   exports: [],
   imports: [

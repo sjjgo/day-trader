@@ -1,7 +1,8 @@
 import { Component, OnInit, ApplicationRef } from '@angular/core';
 import { UserService } from '../_services/UserService.service';
 import { PusherService } from '../_services/PusherService.service';
-import { GameService } from '../_services/GameService.service'
+import { GameService } from '../_services/GameService.service';
+import { ParamsService } from '../_services/ParamsService.service';
 import { Router } from '@angular/router';
 
 
@@ -15,9 +16,8 @@ import { Router } from '@angular/router';
 export class GameComponent implements OnInit {
 
  
-  public tables = [
-  ];
-  private TOTAL = 100;
+  public tables = [];
+  private TOTAL = 40;
   private cummulativeTotal = {};
   private hasError = true;
   public waiting = false;
@@ -26,7 +26,7 @@ export class GameComponent implements OnInit {
   public user;
 	public disabled : boolean = true;
 	public round = 0; 
-  public balance = 100; 
+  public balance = this.TOTAL; 
   public error1: string = ""; public error2: string = "";
   public prev1 = 0; public prev2 = 0;
   public indInv = 0; public grpInv = 0;
@@ -37,8 +37,7 @@ export class GameComponent implements OnInit {
 
 
   constructor(private userService : UserService, private pusher: PusherService, 
-              private router: Router, private game: GameService,
-              private _appRef: ApplicationRef) {}
+              private router: Router, private game: GameService, private params: ParamsService) {}
 
   ngOnInit() {
     let that = this;
@@ -80,7 +79,7 @@ export class GameComponent implements OnInit {
   public go(ind_invstmnt, grp_invstmnt) {
     console.log("Should ask the user if they want to lock in their answer");
     this.game
-    .saveResults(this.user.id, ind_invstmnt, grp_invstmnt, this.user.channel_id, this.round)
+    .saveResults(this.user.id, Number(ind_invstmnt), Number(grp_invstmnt), this.user.channel_id, this.round)
     .subscribe(
       valid => console.log("successs"),
       error => console.log("failed")
@@ -118,8 +117,9 @@ export class GameComponent implements OnInit {
   	let result = { valid: false, res: "", number};
     var number = Number(value);
     this.hasError = true;
-    // console.log(number);
+    console.log(number);
   	if (isNaN(number)) result.res = "Not a number";
+    else if (this.isNotALegitNumber(value)) result.res = "Not a number";
     else if (this.isNegative(number)) result.res = "Cannot be less than zero";
     else if (this.moreThanForty(number)) result.res = "Cannot be more than " + this.TOTAL;
     else if (this.negativeCurrentBalance(number, box)) result.res = "Current balance cannot be less than 0";
@@ -131,7 +131,9 @@ export class GameComponent implements OnInit {
 
   	return result;
   }
-
+  /*
+  Validations
+   */
   private isNegative(value) : boolean {
     if (value < 0) return true;
     return false;
@@ -157,6 +159,11 @@ export class GameComponent implements OnInit {
     return false;
   }
 
+  private isNotALegitNumber(value) {
+    if ((value[0] == 0 && value.length > 1) || value[0] == " ") return true;
+    return false;
+  }
+
   /*
   Pusher event binding
    */
@@ -166,8 +173,10 @@ export class GameComponent implements OnInit {
       console.log("round completed");
       console.log(data);
       for(var i = 0; i < that.members.length; i++) {
-        that.members[i].info.grp_payoff = data.total_grp_investment - that.members[i].info.grp;
-        that.members[i].info.profit = that.members[i].info.grp_payoff + that.members[i].info.ind_payoff;
+        // Grp payoff = sum of grp investments
+        that.members[i].info.grp_payoff = data.total_grp_investment;
+        that.members[i].info.profit = (that.members[i].info.grp_payoff + that.members[i].info.ind_payoff)
+                                      - (that.members[i].info.grp + that.members[i].info.ind);
         if (that.round != 0) {
           that.cummulativeTotal[that.members[i].id] += that.members[i].info.profit;
         }
@@ -180,7 +189,9 @@ export class GameComponent implements OnInit {
       that.tables.push(JSON.parse(clonedMembers));
       that.reset();
       that.currentTable = that.round;
-      that.round++;
+      if (that.round != 4) {
+        that.round++;
+      }
     });
   }
 
@@ -203,8 +214,10 @@ export class GameComponent implements OnInit {
   private bindToGameOver() {
     let that = this;
     this.channel.bind('game-over', function(data){
-      that.router.navigateByUrl('/end');
-      console.log(data);
+      setTimeout(function () {
+        that.params.saveTables(that.tables);
+        that.router.navigateByUrl('/end');
+      }, 500);
     });
   }
 

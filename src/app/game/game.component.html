@@ -9,13 +9,13 @@
 				<span>{{balance}}</span>
 				<div class="form-group">
 				 	<label for="ind-investment">Individual investment</label>
-					<input #box1 (keyup)="validateWithDelay(box1.value, 1, 150)" [(ngModel)]="first_box"  type="text" class="form-control" placeholder="Enter amount" >
+					<input #box1 (keyup)="validateWithDelay(box1.value, 1, 150)" [(ngModel)]="first_box"  type="text" class="form-control" placeholder="Enter amount" [attr.disabled]="waiting ? 'true' : null" >
 					<span *ngIf="error1 != ''" class="has-error">{{ error1 }}</span>
 				</div>
 
 				<div class="form-group">
 				   <label for="grp-investment">Group investment</label>
-				   <input #box2 (keyup)="validateWithDelay(box2.value, 2, 150)" [(ngModel)]="snd_box" type="text" class="form-control" placeholder="Enter amount">
+				   <input #box2 (keyup)="validateWithDelay(box2.value, 2, 150)" [(ngModel)]="snd_box" type="text" class="form-control" placeholder="Enter amount" [attr.disabled]="waiting ? 'true' : null">
 				   <span *ngIf="error2 != ''" class="has-error">{{ error2 }}</span>
 				</div>
 				<button type="submit" class="btn btn-outline-primary btn-block" id="submit-btn" 

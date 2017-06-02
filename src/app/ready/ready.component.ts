@@ -30,7 +30,7 @@ export class ReadyComponent implements OnInit {
   private subscribeToChannel() {
     (this.pusher.subscribe(this.user.channel_id)).then((channel) => {
       this.channel = channel;
-      console.log(this.channel);
+      // console.log(this.channel);
       this.bindToSubscriptionSucceeded().then(() => {
         this.getReadiedPlayersIds();
       }, (err) => {
