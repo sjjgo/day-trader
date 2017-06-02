@@ -23,7 +23,7 @@ export class GameService {
 			"grp" : grp_investment,
 			"user_id" : user_id
 		};
-		console.log('fired');
+		// console.log('fired');
 		return this.http
 			.post(this.hostname + url, body, options)
 		  .map(function() {return {value:true}})
