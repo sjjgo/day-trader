@@ -103,7 +103,7 @@ export class ReadyComponent implements OnInit {
       }
       // console.log(that.members);
       // Uncomment in productions
-      if (/* that.members.length == 4 */ that.members.length == 2) {
+      if (that.members.length == 4  /*that.members.length == 2*/) {
         for(var i = 0; i < that.members.length; i++) {
           if (that.members[i].info.ready == false) {
             allReady = false;
