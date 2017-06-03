@@ -173,7 +173,6 @@ export class GameComponent implements OnInit {
       console.log("round completed");
       console.log(data);
       for(var i = 0; i < that.members.length; i++) {
-        // Grp payoff = sum of grp investments
         that.members[i].info.grp_payoff = data.total_grp_investment;
         that.members[i].info.profit = (that.members[i].info.grp_payoff + that.members[i].info.ind_payoff)
                                       - (that.members[i].info.grp + that.members[i].info.ind);
@@ -192,6 +191,7 @@ export class GameComponent implements OnInit {
       if (that.round != 4) {
         that.round++;
       }
+      console.log(that.tables);
     });
   }
 

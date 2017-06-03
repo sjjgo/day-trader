@@ -64,6 +64,7 @@ export class ReadyComponent implements OnInit {
     this.channel.bind('pusher:member_added', function(member) {
       that.members.push(member);
       console.log('Member added!');
+      console.log(member);
     });
   }
 
@@ -110,6 +111,7 @@ export class ReadyComponent implements OnInit {
             break;
           }
         }
+        console.log(that.members);
         if (allReady) {
           // TODO: should have 1 second loading screen for fun
           that.router.navigateByUrl('/game');

@@ -379,6 +379,10 @@ app.get("/admin/generate", function(req,res) {
 	res.send("it works!");
 }); 
 
+/**
+ * "/admin/"
+ */
+
 
 /* "/api/rounds/channel/:channel_id"
  * 	GET: find game data for all rounds, for all users by channel
