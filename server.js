@@ -28,7 +28,7 @@ app.use(function (req, res, next) {
 	next();
 });
 
-process.env.MONGODB_URI	= "mongodb://heroku_6hwpbxh2:raq47plkhelaj01geo1i9cfo29@ds131109.mlab.com:31109/heroku_6hwpbxh2";
+process.env.MONGODB_URI	= "mongodb://heroku_g2x7l3wg:e2nm4g95jnb5jpje2m91r3rp1d@ds159591.mlab.com:59591/heroku_g2x7l3wg";
 
 var pusher = new Pusher({
   appId: '328228',
@@ -322,62 +322,62 @@ app.post("/api/game/:channel_id/:round", function(req, res) {
  * GET: generates channels, gameCodes and games
  */
 
-// app.get("/admin/generate", function(req,res) {
+app.get("/admin/generate", function(req,res) {
 
-// 	var games_body = {
-// 		"round_1": {
-// 		     "submitted_count": 0,
-// 		     "players": []
-// 		 },
-// 		 "round_2": {
-// 		     "submitted_count": 0,
-// 		     "players": []
-// 		 },
-// 		 "round_3": {
-// 		     "submitted_count": 0,
-// 		     "players": []
-// 		 },
-// 		 "round_4": {
-// 		     "submitted_count": 0,
-// 		     "players": []
-// 		 },
-// 		 "round_5": {
-// 		     "submitted_count": 0,
-// 		     "players": []
-// 		 }
-// 	}
+	var games_body = {
+		"round_1": {
+		     "submitted_count": 0,
+		     "players": []
+		 },
+		 "round_2": {
+		     "submitted_count": 0,
+		     "players": []
+		 },
+		 "round_3": {
+		     "submitted_count": 0,
+		     "players": []
+		 },
+		 "round_4": {
+		     "submitted_count": 0,
+		     "players": []
+		 },
+		 "round_5": {
+		     "submitted_count": 0,
+		     "players": []
+		 }
+	}
 
-// 	var words = ['bumblebee', 'icecream',  'soldier', 'tree', 'birds', 'insect', 'laserbeam', 'robots', 'grizzly', 'roar', 'meticulous', 'panda', 'bear', 'patchy', 'hipster', 'cool',
-// 	'geek', 'jump', 'balance', 'mouse', 'mice', 'pasta', 'linguine', 'penne', 'crab', 'squid', 'angelfish',
-// 	 'waterfall', 'rainbows', 'unicorns', 'horse', 'goat', 'cow', 'computer', 'excellent', 'pretty', 'handsome', 'sexy',
-// 	 'beast', 'xmen', 'professor', 'xavier', 'arthur', 'merlin', 'lancelot', 'percival','gawain', 'geraint', 'luke',
-// 	 'skywalker', 'yoda', 'vader', 'anakin', 'obi-wan', 'kenobi', 'leia', 'han-solo', 'chewbacca', 'cookie', 'clone-trooper',
-// 	 'r2d2', 'boba-fett', 'jaba', 'storm-trooper', 'ahsoka', 'banana', 'pineapple', 'grapefruit', 'kamehameha', 'goku',
-// 	 'naruto', 'ice-ice', 'britney' 
-// 	] 
-// 	for(var i = 0; i < 16; i++) {
-// 		var gameCode = faker.random.arrayElement(words) + "-" + faker.random.arrayElement(words) + "-" + shortid.generate();
-// 		var channel_id = shortid.generate();
+	var words = ['bumblebee', 'icecream',  'soldier', 'tree', 'birds', 'insect', 'laserbeam', 'robots', 'grizzly', 'roar', 'meticulous', 'panda', 'bear', 'patchy', 'hipster', 'cool',
+	'geek', 'jump', 'balance', 'mouse', 'mice', 'pasta', 'linguine', 'penne', 'crab', 'squid', 'angelfish',
+	 'waterfall', 'rainbows', 'unicorns', 'horse', 'goat', 'cow', 'computer', 'excellent', 'pretty', 'handsome', 'sexy',
+	 'beast', 'xmen', 'professor', 'xavier', 'arthur', 'merlin', 'lancelot', 'percival','gawain', 'geraint', 'luke',
+	 'skywalker', 'yoda', 'vader', 'anakin', 'obi-wan', 'kenobi', 'leia', 'han-solo', 'chewbacca', 'cookie', 'clone-trooper',
+	 'r2d2', 'boba-fett', 'jaba', 'storm-trooper', 'ahsoka', 'banana', 'pineapple', 'grapefruit', 'kamehameha', 'goku',
+	 'naruto', 'ice-ice', 'britney' 
+	] 
+	for(var i = 0; i < 10; i++) {
+		var gameCode = faker.random.arrayElement(words) + "-" + shortid.generate();
+		var channel_id = shortid.generate();
 
-// 		var gameCodeObj = {
-// 			game_code : gameCode,
-// 			activated_count : 0,
-// 			channel_id : channel_id
-// 		}
+		var gameCodeObj = {
+			game_code : gameCode,
+			activated_count : 0,
+			channel_id : channel_id
+		}
 
-// 		var channeObj = {
-// 			channel_id : channel_id,
-// 			users : []
-// 		}
+		var channeObj = {
+			channel_id : channel_id,
+			users : []
+		}
 
-// 		var game = Object.assign({channel_id : channel_id}, games_body); 
+		var game = Object.assign({channel_id : channel_id}, games_body); 
 
-// 		db.collection(GAMECODES_COLLECTION).insert(gameCodeObj);
-// 		db.collection(CHANNELS_COLLECTION).insert(channeObj);
-// 		db.collection(GAMES_COLLECTION).insert(game);
-// 	}
-// 	res.send("it works!");
-// }); 
+		db.collection(GAMECODES_COLLECTION).insert(gameCodeObj);
+		db.collection(CHANNELS_COLLECTION).insert(channeObj);
+		db.collection(GAMES_COLLECTION).insert(game);
+	}
+	res.send("it works!");
+}); 
 
 
 /* "/api/rounds/channel/:channel_id"
