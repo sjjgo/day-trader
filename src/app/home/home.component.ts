@@ -26,6 +26,7 @@ export class HomeComponent{
       this.user.save(this.username, gameCodeDetails.user_id, gameCodeDetails.channel_id);
   		this.router.navigateByUrl('/ready');
   	}
+    console.log(gameCodeDetails);
   }
 
   usernameChange(username) {
