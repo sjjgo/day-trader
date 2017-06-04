@@ -1,8 +1,11 @@
 <div class="container">
 	<div class="header">
-		<h1>Game: Round {{round + 1}}</h1><hr>
+		<h1>Game: Day {{round + 1}} of 5</h1><hr>
 	</div>
 	<div class="body">
+	<p>Remember:<br>
+	The individual investment yields a guaranteed doubling of the payoff every round. On the other hand, the group investment payoff is dependent on how much other traders have invested in the common pool such that every players’ contributions are lumped together, multiplied by 4, and then distributed back evenly.<br>
+	Please click INVEST when you are ready to invest.</p><hr>
 		<div class="row">
 			<div class="col-4">
 				<label for="cur-balance">Current Balance: </label>
@@ -24,6 +27,7 @@
 					<div *ngIf=!disabled&&!waiting>Ok!</div>
 					<div *ngIf=waiting>Submitted</div>
 				</button>
+				<p class="submitted-feedback" *ngIf=waiting><em>Waiting for other players...</em></p>
 			</div>
 			<div class="col-8">
 				<table *ngIf="round!=0" class="table table-bordered table-hover">

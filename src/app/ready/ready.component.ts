@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../_services/UserService.service';
 import { PusherService } from '../_services/PusherService.service';
 import { Router } from '@angular/router';
+import * as GLOBAL from '../globals';
 
 @Component({
   selector: 'app-ready',
@@ -83,7 +84,7 @@ export class ReadyComponent implements OnInit {
         return;
       }
       that.members.splice(index, 1);
-      console.log("Member removed");
+      // console.log("Member removed");
     });
   }
   /**
@@ -103,15 +104,14 @@ export class ReadyComponent implements OnInit {
         }
       }
       // console.log(that.members);
-      // Uncomment in productions
-      if (that.members.length == 4  /*that.members.length == 2*/) {
+      if (that.members.length == GLOBAL.number_of_players ) {
         for(var i = 0; i < that.members.length; i++) {
           if (that.members[i].info.ready == false) {
             allReady = false;
             break;
           }
         }
-        console.log(that.members);
+        // console.log(that.members);
         if (allReady) {
           // TODO: should have 1 second loading screen for fun
           that.router.navigateByUrl('/game');

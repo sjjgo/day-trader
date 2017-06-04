@@ -77,7 +77,7 @@ export class GameComponent implements OnInit {
   
 
   public go(ind_invstmnt, grp_invstmnt) {
-    console.log("Should ask the user if they want to lock in their answer");
+    // console.log("Should ask the user if they want to lock in their answer");
     this.game
     .saveResults(this.user.id, Number(ind_invstmnt), Number(grp_invstmnt), this.user.channel_id, this.round)
     .subscribe(
@@ -171,7 +171,7 @@ export class GameComponent implements OnInit {
     let that = this;
     this.channel.bind('round-completed', function(data) {
       console.log("round completed");
-      console.log(data);
+      // console.log(data);
       for(var i = 0; i < that.members.length; i++) {
         that.members[i].info.grp_payoff = data.total_grp_investment;
         that.members[i].info.profit = (that.members[i].info.grp_payoff + that.members[i].info.ind_payoff)
@@ -191,7 +191,7 @@ export class GameComponent implements OnInit {
       if (that.round != 4) {
         that.round++;
       }
-      console.log(that.tables);
+      // console.log(that.tables);
     });
   }
 
@@ -207,7 +207,7 @@ export class GameComponent implements OnInit {
           break;
         }
       }
-      console.log('player updated');
+      // console.log('player updated');
     });
   }
 
