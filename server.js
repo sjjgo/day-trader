@@ -13,7 +13,7 @@ const GAMECODES_COLLECTION = "gameCodes";
 const USERS_COLLECTION = "users";
 const CHANNELS_COLLECTION = "channels";
 const GAMES_COLLECTION = "games";
-const NUM_OF_PLAYERS = 3;
+const NUM_OF_PLAYERS = 4;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
