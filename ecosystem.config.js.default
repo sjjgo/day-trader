@@ -1,0 +1,26 @@
+module.exports = {
+  "apps": [{
+    "name"   : "invest-app",
+    "script" : "server.js",
+    "watch": ["server.js"],
+    "env":{
+        "NODE_ENV":"development",
+        "PUSHER_APP_ID":"", // <- Pusher API app ID
+        "PUSHER_KEY":"", // <- Pusher API app key
+        "PUSHER_SECRET":"", // <- Pusher API secret key
+        "PUSHER_CLUSTER":"", // <- Pusher API cluster location
+        "MONGODB_URI": "", // <- MongoDB connection URI
+        "PORT":4200 // <- Port to run on
+    },
+    "env_production":{
+        "NODE_ENV":"production",
+        "NODE_ENV":"development",
+        "PUSHER_APP_ID":"", // <- Pusher API app ID
+        "PUSHER_KEY":"", // <- Pusher API app key
+        "PUSHER_SECRET":"", // <- Pusher API secret key
+        "PUSHER_CLUSTER":"", // <- Pusher API cluster location
+        "MONGODB_URI": "", // <- MongoDB connection URI
+        "PORT":443 // <- Port to run on
+    }
+  }]
+}

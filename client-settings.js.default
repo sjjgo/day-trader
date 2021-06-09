@@ -1,0 +1,12 @@
+module.exports = {
+    "env":{ // <- dev env
+        "PUSHER_KEY":"", // <- Pusher app key
+        "HOSTNAME":"http://localhost:4200", // <- hostname you're serving from
+        "NUMBER_PLAYERS":4 // <- how many players there are in a round
+    },
+    "env_production":{ // <- production env
+        "PUSHER_KEY":"", // <- Pusher app key
+        "HOSTNAME":"", // <- hostname you're serving from
+        "NUMBER_PLAYERS":4
+    }
+}
