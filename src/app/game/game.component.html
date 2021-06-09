@@ -1,69 +1,111 @@
 <div class="container">
-	<div class="header">
-		<h1>Game: Day {{round + 1}} of 5</h1><hr>
-	</div>
-	<div class="body">
-	<p>Remember:<br>
-	The individual investment yields a guaranteed doubling of the payoff every round. On the other hand, the group investment payoff is dependent on how much other traders have invested in the common pool such that every players’ contributions are lumped together, multiplied by 4, and then distributed back evenly.<br>
-	Please click INVEST when you are ready to invest.</p><hr>
-		<div class="row">
-			<div class="col-4">
-				<label for="cur-balance">Current Balance: </label>
-				<span>{{balance}}</span>
-				<div class="form-group">
-				 	<label for="ind-investment">Individual investment</label>
-					<input #box1 (keyup)="validateWithDelay(box1.value, 1, 150)" [(ngModel)]="first_box"  type="text" class="form-control" placeholder="Enter amount" [attr.disabled]="waiting ? 'true' : null" >
-					<span *ngIf="error1 != ''" class="has-error">{{ error1 }}</span>
-				</div>
+  <div class="header">
+    <h1>Game: Day {{ round + 1 }} of 5</h1>
+    <hr />
+  </div>
+  <div class="body">
+    <p>
+      Remember:<br />
+      The individual investment yields a guaranteed doubling of the payoff every
+      round. On the other hand, the group investment payoff is dependent on how
+      much other traders have invested in the common pool such that every
+      players’ contributions are lumped together, multiplied by 4, and then
+      distributed back evenly.<br />
+      Please click INVEST when you are ready to invest.
+    </p>
+    <hr />
+    <div class="row">
+      <div class="col-4">
+        <label for="cur-balance">Current Balance: </label>
+        <span>{{ balance }}</span>
+        <div class="form-group">
+          <label for="ind-investment">Individual investment</label>
+          <input
+            #box1
+            (keyup)="validateWithDelay(box1.value, 1, 150)"
+            [(ngModel)]="first_box"
+            type="text"
+            class="form-control"
+            placeholder="Enter amount"
+            [attr.disabled]="waiting ? 'true' : null"
+          />
+          <span *ngIf="error1 !== ''" class="has-error">{{ error1 }}</span>
+        </div>
 
-				<div class="form-group">
-				   <label for="grp-investment">Group investment</label>
-				   <input #box2 (keyup)="validateWithDelay(box2.value, 2, 150)" [(ngModel)]="snd_box" type="text" class="form-control" placeholder="Enter amount" [attr.disabled]="waiting ? 'true' : null">
-				   <span *ngIf="error2 != ''" class="has-error">{{ error2 }}</span>
-				</div>
-				<button type="submit" class="btn btn-outline-primary btn-block" id="submit-btn" 
-				(click)="go(box1.value, box2.value)" [attr.disabled]="disabled||waiting ? 'true' : null">
-					<div *ngIf=disabled>Nope</div>
-					<div *ngIf=!disabled&&!waiting>Ok!</div>
-					<div *ngIf=waiting>Submitted</div>
-				</button>
-				<p class="submitted-feedback" *ngIf=waiting><em>Waiting for other players...</em></p>
-			</div>
-			<div class="col-8">
-				<table *ngIf="round!=0" class="table table-bordered table-hover">
-				  <thead>
-				    <tr>
-				      <th rowspan="2">Player</th>
-				      <th colspan="2">Investment</th>
-				      <th colspan="2">Payoff</th>
-				      <th rowspan="2">Profit</th>
-				      <th rowspan="2">Total</th>
-				    </tr>
-				    <tr>
-							<th>Individual</th>
-							<th>Group</th>
-							<th>Individual</th>
-							<th>Group</th>
-				    </tr>
-				  </thead>
-				  <tbody>
-				    <tr *ngFor="let member of tables[currentTable]">
-				      <th scope="row">{{member.info.username}}</th>
-				      <td>{{member.info.ind}}</td>
-				      <td>{{member.info.grp}}</td>
-							<td>{{member.info.ind_payoff}}</td>
-							<td>{{member.info.grp_payoff}}</td>
-							<td>{{member.info.profit}}</td>
-							<td>{{member.info.total}}</td>
-				    </tr>
-				  </tbody>
-				</table>
-				<div data-toggle="buttons">
-				  <label  *ngFor="let table of tables; let i = index" (click)="switchTable(i)" class="btn-group" class="btn btn-primary" >
-				    <input type="radio" name="options" id="option1" autocomplete="off"> {{ i+1 }}
-				  </label>
-				</div>
-			</div>
-		</div>
-	</div>
+        <div class="form-group">
+          <label for="grp-investment">Group investment</label>
+          <input
+            #box2
+            (keyup)="validateWithDelay(box2.value, 2, 150)"
+            [(ngModel)]="snd_box"
+            type="text"
+            class="form-control"
+            placeholder="Enter amount"
+            [attr.disabled]="waiting ? 'true' : null"
+          />
+          <span *ngIf="error2 !== ''" class="has-error">{{ error2 }}</span>
+        </div>
+        <button
+          type="submit"
+          class="btn btn-outline-primary btn-block"
+          id="submit-btn"
+          (click)="go(box1.value, box2.value)"
+          [attr.disabled]="disabled || waiting ? 'true' : null"
+        >
+          <div *ngIf="disabled">Nope</div>
+          <div *ngIf="!disabled && !waiting">Ok!</div>
+          <div *ngIf="waiting">Submitted</div>
+        </button>
+        <p class="submitted-feedback" *ngIf="waiting">
+          <em>Waiting for other players...</em>
+        </p>
+      </div>
+      <div class="col-8">
+        <table *ngIf="round !== 0" class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th rowspan="2">Player</th>
+              <th colspan="2">Investment</th>
+              <th colspan="2">Payoff</th>
+              <th rowspan="2">Profit</th>
+              <th rowspan="2">Total</th>
+            </tr>
+            <tr>
+              <th>Individual</th>
+              <th>Group</th>
+              <th>Individual</th>
+              <th>Group</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let member of tables[currentTable]">
+              <th scope="row">{{ member.info.username }}</th>
+              <td>{{ member.info.ind }}</td>
+              <td>{{ member.info.grp }}</td>
+              <td>{{ member.info.ind_payoff }}</td>
+              <td>{{ member.info.grp_payoff }}</td>
+              <td>{{ member.info.profit }}</td>
+              <td>{{ member.info.total }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div data-toggle="buttons">
+          <label
+            *ngFor="let table of tables; let i = index"
+            (click)="switchTable(i)"
+            class="btn-group"
+            class="btn btn-primary"
+          >
+            <input
+              type="radio"
+              name="options"
+              id="option1"
+              autocomplete="off"
+            />
+            {{ i + 1 }}
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

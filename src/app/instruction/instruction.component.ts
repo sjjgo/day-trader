@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 
 @Component({
-  selector: 'instructions',
-  templateUrl: './instruction.component.html',
-  styleUrls: ['./instruction.component.css']
+  selector: "app-instructions",
+  templateUrl: "./instruction.component.html",
+  styleUrls: ["./instruction.component.css"],
 })
-export class InstructionComponent{}
+export class InstructionComponent {}

@@ -9,21 +9,21 @@
       <th rowspan="2">Total</th>
     </tr>
     <tr>
-			<th>Individual</th>
-			<th>Group</th>
-			<th>Individual</th>
-			<th>Group</th>
+      <th>Individual</th>
+      <th>Group</th>
+      <th>Individual</th>
+      <th>Group</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let row of table">
-      <th scope="row">{{row.player}}</th>
-      <td>{{row.indInv}}</td>
-      <td>{{row.grpInv}}</td>
-      <td>{{row.indPayoff}}</td>
-      <td>{{row.grpPayoff}}</td>
-      <td>{{row.profit}}</td>
-      <td>{{row.total}}</td>
+      <th scope="row">{{ row.player }}</th>
+      <td>{{ row.indInv }}</td>
+      <td>{{ row.grpInv }}</td>
+      <td>{{ row.indPayoff }}</td>
+      <td>{{ row.grpPayoff }}</td>
+      <td>{{ row.profit }}</td>
+      <td>{{ row.total }}</td>
     </tr>
   </tbody>
 </table>

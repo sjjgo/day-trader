@@ -1,25 +1,35 @@
-
 <div class="content">
-	<instructions></instructions>
-	<h1>Players</h1>
-	{{username}}
+  <h1>Instructions</h1>
+  <app-instructions></app-instructions>
+  <h1>Players</h1>
+  {{ username }}
 
-	<table class="table">
-		<thead>
-			<tr>
-				<th>Player</th>
-				<th>Ready</th>
-			</tr>
-		</thead>
-		<tbody>
-				<tr *ngFor="let member of members">
-					<td *ngIf="!member.info.ready">{{ member.info.username }}</td>
-					<td *ngIf="!member.info.ready">Let's Go!</td>
-					<td *ngIf="member.info.ready" class="is-ready">{{ member.info.username }}</td>
-					<td *ngIf="member.info.ready" class="is-ready">Let's Go!</td>
-				</tr>
-		</tbody>
-	</table>
-	<button *ngIf="ready==false" (click)=readyUp() class="btn btn-outline-primary btn-block">Ready</button>
-	<button *ngIf="ready" class="btn btn-outline-primary btn-block" disabled>Waiting for other players...</button>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Player</th>
+        <th>Ready</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let member of members">
+        <td *ngIf="!member.info.ready">{{ member.info.username }}</td>
+        <td *ngIf="!member.info.ready">Let's Go!</td>
+        <td *ngIf="member.info.ready" class="is-ready">
+          {{ member.info.username }}
+        </td>
+        <td *ngIf="member.info.ready" class="is-ready">Let's Go!</td>
+      </tr>
+    </tbody>
+  </table>
+  <button
+    *ngIf="ready === false"
+    (click)="readyUp()"
+    class="btn btn-outline-primary btn-block"
+  >
+    Ready
+  </button>
+  <button *ngIf="ready" class="btn btn-outline-primary btn-block" disabled>
+    Waiting for other players...
+  </button>
 </div>

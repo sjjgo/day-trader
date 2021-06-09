@@ -32,6 +32,9 @@ schema
 npm-debug.log
 testem.log
 /typings
+ecosystem.config.js
+package-lock.json
+client-settings.js
 
 # e2e
 /e2e/*.js

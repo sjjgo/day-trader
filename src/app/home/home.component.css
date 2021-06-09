@@ -1,17 +1,17 @@
 .content {
-	margin: 0 30vh 0 30vh;
+  margin: 0 auto;
 }
 
-input[type="text"]{
-	margin-top: 0.6vh;
-	height: 4em;
+input[type="text"] {
+  margin-top: 0.6vh;
+  height: 4em;
 }
 
-button[type=submit] {
-	margin-top: 3vh; 
-	height: 10vh;
+button[type="submit"] {
+  margin-top: 3vh;
+  height: 10vh;
 }
 
 .input-group {
-	padding-bottom: 1vh;
+  padding-bottom: 1vh;
 }

@@ -1,25 +1,39 @@
-	<div class="content">
-		<h1>Welcome</h1><hr>
-		<p>PLEASE READ THE INSTRUCTIONS BEFORE YOU BEGIN</p>
-		<p>In this next part of the experiment you are a day-trader for the next 5 days. One round represents 1 day. Each round, you will receive $40 and have to decide whether to invest as an individual or risk investing with the group.</p>
-		<p>The individual investment yields a guaranteed doubling of the payoff every round. On the other hand, the group investment payoff is dependent on how much other traders have invested in the common pool such that every players’ contributions are lumped together, multiplied by 4, and then distributed back evenly. The person with the highest individual payoff at the end of the 5 days will receive an additional ballot into the £30 cash prize draw at the end of the experiment. If there is a tie, both persons will receive an additional ballot.</p>
-		<p>You are playing with the same team from the start of the experiment. When you are ready, please put your first name and first letter of your surname in the USERNAME box and put the game code that you have received in the GAMECODE box.</p><hr>
-		<div class="form-group">
-			<h5 *ngIf="username">Hello {{ username }}</h5>
-			<label for="game-code">Username</label>
-			<div class="input-group" id="game-code-input">
-			  <input [ngModel]="username" (ngModelChange)="usernameChange($event)" type="text" class="form-control"  placeholder="Enter Username (eg. Evelyn T)">
-			</div>
+<div class="content">
+  <h1>Welcome</h1>
+  <hr />
+  <app-instructions></app-instructions>
+  <hr />
+  <div class="form-group">
+    <h5 *ngIf="username">Hello {{ username }}</h5>
+    <label for="game-code">Username</label>
+    <div class="input-group" id="game-code-input">
+      <input
+        [ngModel]="username"
+        (ngModelChange)="usernameChange($event)"
+        type="text"
+        class="form-control"
+        placeholder="Enter Username (eg. MrBlobby)"
+      />
+    </div>
 
-
-			<label for="game-code">Game Code</label>
-			<div class="input-group" id="game-code-input">
-			  <input [ngModel]="gameCode" (ngModelChange)="gameCodeChange($event)" type="text" class="form-control"  placeholder="Enter Game Code">
-			</div>
-			<p *ngIf="info" class="has-error">{{ info }}</p>
-
-		</div>
-		<button type="submit" class="btn btn-outline-primary btn-block" id="submit-btn" (click)="validate()"> Verify</button>
-	</div>
-	
-
+    <label for="game-code">Game Code</label>
+    <div class="input-group" id="game-code-input">
+      <input
+        [ngModel]="gameCode"
+        (ngModelChange)="gameCodeChange($event)"
+        type="text"
+        class="form-control"
+        placeholder="Enter Game Code"
+      />
+    </div>
+    <p *ngIf="info" class="has-error">{{ info }}</p>
+  </div>
+  <button
+    type="submit"
+    class="btn btn-outline-primary btn-block"
+    id="submit-btn"
+    (click)="validate()"
+  >
+    Verify
+  </button>
+</div>

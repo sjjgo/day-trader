@@ -3,17 +3,16 @@ const express = require('express');
 var bodyParser = require('body-parser');
 var faker = require('faker');
 var shortid = require('shortid');
-var mongodb = require('mongodb');
-var Pusher = require('pusher');
-
-
+const MongoClient = require('mongodb').MongoClient;
+const Pusher = require('pusher');
+const settings = require('./client-settings')
 const app = express();
 
 const GAMECODES_COLLECTION = "gameCodes";
 const USERS_COLLECTION = "users";
 const CHANNELS_COLLECTION = "channels";
 const GAMES_COLLECTION = "games";
-const NUM_OF_PLAYERS = 4;
+const NUM_OF_PLAYERS = settings.env.NUMBER_PLAYERS;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -28,33 +27,28 @@ app.use(function (req, res, next) {
 	next();
 });
 
-process.env.MONGODB_URI	= "mongodb://heroku_g2x7l3wg:e2nm4g95jnb5jpje2m91r3rp1d@ds159591.mlab.com:59591/heroku_g2x7l3wg";
-
 var pusher = new Pusher({
-  appId: '328228',
-  key: '8ec8f5164e15f7cbc5a0',
-  secret: 'b89adf8f37a75b4d0c3e',
-  cluster: 'eu',
-  encrypted: false
-});
+  appId: process.env.PUSHER_APP_ID,
+  key: process.env.PUSHER_KEY,
+  secret: process.env.PUSHER_SECRET,
+  cluster:process.env.PUSHER_CLUSTER
+  });
 
+const mongoClient = new MongoClient(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+var db;
 
-mongodb.MongoClient.connect(process.env.MONGODB_URI, function (err, database){
-	if (err) {
-		console.log(err);
-		process.exit(1);
-	}
+async function start(){
+  await mongoClient.connect();
+  db = mongoClient.db('daytrade');
+  console.log("mongoDB connection made")
+  app.listen(process.env.PORT || 8080, function (){
+    var port = this.address().port;
+    var hostname = this.address().address;
+    console.log("App now running on address:port", hostname, port);
+  });
+}
 
-	// Save database object from callback for reuse
-	db = database;
-
-	// Initialize app
-	var server = app.listen(process.env.PORT || 8080, function (){
-		var port = server.address().port;
-		var hostname = server.address().address;
-		console.log("App now running on address:port", port);
-	});
-});
+start();
 
 // GAME API BELOW
 
@@ -76,7 +70,7 @@ app.post("/api/game-codes/validate", function(req, res) {
 	db.collection(GAMECODES_COLLECTION).findOneAndUpdate(
 		{ game_code: req.body.gamecode },
 		{ $inc: {activated_count: 1} },
-		{ returnOriginal: false },
+		{ returnDocument: 'after'},
 		function(err, result){
 			if (err) {
 				handleError(res, err.message,  err.message, 500);
@@ -88,7 +82,7 @@ app.post("/api/game-codes/validate", function(req, res) {
 					res.status(201).json(response);
 				}
 				else if (result.value) {
-					// Creater user-channel association (PK)
+					// Creat a user-channel association (PK)
 					db.collection(USERS_COLLECTION).insertOne({
 						username : req.body.username,
 						channel_id : result.value.channel_id
@@ -104,13 +98,13 @@ app.post("/api/game-codes/validate", function(req, res) {
 				}
 				else {
 					res.status(201).json(response).send();
-				}		
+				}
 			}
 		});
 });
 
 /* "/api/pusher/auth"
- * 	POST: auth endpoint for pusher authentication 
+ * 	POST: auth endpoint for pusher authentication
  */
 
 app.post("/api/pusher/auth", function(req, res) {
@@ -129,30 +123,25 @@ app.post("/api/pusher/auth", function(req, res) {
 		user_id: user_id
 	};
 	var auth = pusher.authenticate(socketId, channel, presenceData);
-	// console.log("Pusher authentication");
 	res.status(200).send(auth);
 });
 /* "/api/ready"
  * 	POST: ready up on ready page
  */
-app.post("/api/ready", function(req, res) {
+app.post("/api/ready", async function(req, res) {
 	var userid = req.body.user_id;
 	var channel_id = req.body.channel_id
-	db.collection(CHANNELS_COLLECTION).findOneAndUpdate(
-		{ channel_id: channel_id},
-		{ $push: {users: userid}},
-		{ returnOriginal: false},
-		function(err, r) {
-			if (err) {
-				handleError(res, err.message,  err.message, 500);
-			}
-			else {
-				pusher.trigger('presence-' + channel_id, 'all-ready', {
-					user_id: userid
-				});
-				res.status(200).send();
-			}
-		});
+	try{
+    await db.collection(CHANNELS_COLLECTION).findOneAndUpdate(
+      { channel_id: channel_id},
+      { $addToSet: {users: userid}},
+      { returnDocument: 'after'});
+    await pusher.trigger('presence-' + channel_id, 'all-ready', {user_id: userid});
+    res.status(200).send({status:"received"});
+	}
+  catch(err){
+    handleError(res, err.message,  err.message, 500);
+  }
 });
 
 /* "/api/ready"
@@ -163,7 +152,7 @@ app.get("/api/ready/:channel_id", function(req, res) {
 	var channel_id = req.params.channel_id;
 	db.collection(CHANNELS_COLLECTION).findOne(
 		{channel_id: channel_id},
-		{fields: {users: 1}},
+		{projection: {users: 1}},
 		function(err, doc) {
 			if (err) {
 				handleError(res, err.message,  err.message, 500);
@@ -182,7 +171,7 @@ app.get("/api/ready/:channel_id", function(req, res) {
  * 	POST: save game data for 1 round
  */
 
-app.post("/api/game/:channel_id/:round", function(req, res) {
+app.post("/api/game/:channel_id/:round", async function(req, res) {
 	var channel_id = req.params.channel_id;
 	var reqRound = req.params.round;
 	var round = "round_" + req.params.round;
@@ -202,127 +191,96 @@ app.post("/api/game/:channel_id/:round", function(req, res) {
 		ind_payoff : ind_invstmnt * 2,
 		grp_payoff : 0
 	};
-	db.collection(GAMES_COLLECTION).findOneAndUpdate(
-	{channel_id: channel_id },
-	{ $inc : submitted_count_update, $push: players_update },
-	{ returnOriginal : false },
-	function(err, r) {
-		if (err) {
-			handleError(res, err.message,  err.message, 500);
-		}
-		else {
-			pusher.trigger('presence-' + channel_id, 'player-updated', {
+	try{
+    let dbResponse = await db.collection(GAMES_COLLECTION).findOneAndUpdate(
+      {channel_id: channel_id },
+      { $inc : submitted_count_update, $push: players_update },
+      { returnDocument: 'after' });
+    await pusher.trigger('presence-' + channel_id, 'player-updated', {
 				user_id : user_id,
 				ind: ind_invstmnt,
 				grp: grp_invstmnt
 			});
-			// console.log('player saved!');
-			// Change back to 4
-			if (r.value[round].submitted_count == NUM_OF_PLAYERS) {
-				// compute group payoff
-				for(var i = 0; i < r.value[round].players.length; i++) {
-					total_grp_investment += Number(r.value[round].players[i].grp_invstmnt);
-				}
-				setTimeout(function() {
-					pusher.trigger('presence-' + channel_id, 'round-completed', {
-						total_grp_investment : total_grp_investment
-					});
-					// console.log("Round-completed triggered");
-				}, 250);
-			}
-			res.status(200).send();
-			// Change back to 4
-			if (r.value[round].submitted_count == NUM_OF_PLAYERS) {
-				// Grp payoff = sum of grp investments
-				for(var i = 0; i < r.value[round].players.length; i++) {
-					r.value[round].players[i].grp_payoff = total_grp_investment;
-				}
-				players_update[players] = r.value[round].players;
-				db.collection(GAMES_COLLECTION).findOneAndUpdate(
-					{channel_id: channel_id },
-					{  $set : players_update },
-					{ returnOriginal : false },
-					function(err, r) {
-						if (err) {
-							handleError(res, err.message,  err.message, 500);
-						}
-						else {
-							// console.log(r.value.round_1);
-						}
-					});
-				if (reqRound == 5) {pusher.trigger('presence-' + channel_id, 'game-over', {});}
-			}
-		}
-	});
+		if (dbResponse.value[round].submitted_count === NUM_OF_PLAYERS) {
+		  console.log("We have "+NUM_OF_PLAYERS+" submitted!")
+      for(let i = 0; i < dbResponse.value[round].players.length; i++) {
+        total_grp_investment += Number(dbResponse.value[round].players[i].grp_invstmnt);
+      }
+      for(let i = 0; i < dbResponse.value[round].players.length; i++) {
+        dbResponse.value[round].players[i].grp_payoff = total_grp_investment;
+      }
+      players_update[players] = dbResponse.value[round].players;
+			await db.collection(GAMES_COLLECTION).findOneAndUpdate(
+			  { channel_id: channel_id },
+				{ $set : players_update },
+				{ returnDocument: 'after' });
+			await pusher.trigger('presence-' + channel_id, 'round-completed', {
+        total_grp_investment : total_grp_investment
+      });
+      console.log('Round '+reqRound)
+      if (parseInt(reqRound) === 5) {
+          await pusher.trigger('presence-' + channel_id, 'game-over', {});
+      }
+    }
+    res.status(200).send();
+	}
+  catch(err){
+    handleError(res, err.message,  err.message, 500);
+  }
 });
 
 /**
  * "/api/admin/reset"
  * GET: reset test game data
  */
-// app.get("/api/admin/reset", function(req, res) {
-// 	var games_body = {
-// 		"round_1": {
-// 		     "submitted_count": 0,
-// 		     "players": []
-// 		 },
-// 		 "round_2": {
-// 		     "submitted_count": 0,
-// 		     "players": []
-// 		 },
-// 		 "round_3": {
-// 		     "submitted_count": 0,
-// 		     "players": []
-// 		 },
-// 		 "round_4": {
-// 		     "submitted_count": 0,
-// 		     "players": []
-// 		 },
-// 		 "round_5": {
-// 		     "submitted_count": 0,
-// 		     "players": []
-// 		 }
-// 	}
-// 	var bumblebee_icecream_a55hv = Object.assign({channel_id: 'bumblebee-icecream-a55hv'}, games_body);
-// 	var fighter_pomade_htg52 = Object.assign({channel_id : 'fighter-pomade-htg52'}, games_body); 
+app.get("/api/admin/reset", async function(req, res) {
+	var games_body = {
+		"round_1": {
+		     "submitted_count": 0,
+		     "players": []
+		 },
+		 "round_2": {
+		     "submitted_count": 0,
+		     "players": []
+		 },
+		 "round_3": {
+		     "submitted_count": 0,
+		     "players": []
+		 },
+		 "round_4": {
+		     "submitted_count": 0,
+		     "players": []
+		 },
+		 "round_5": {
+		     "submitted_count": 0,
+		     "players": []
+		 }
+	}
 
-// 	db.collection(CHANNELS_COLLECTION).findOneAndUpdate(
-// 		{ channel_id: 'bumblebee-icecream-a55hv' },
-// 		{ $set : {users: []} }
-// 	);
-// 	db.collection(GAMECODES_COLLECTION).findOneAndUpdate(
-// 		{ channel_id: 'bumblebee-icecream-a55hv' },
-// 		{ $set : {activated_count:0} }
-// 	);
+  //var patchy_2q3gHOocK = Object.assign({channel_id : 'patchy-2q3gHOocK'}, games_body);
 
-// 	db.collection(GAMES_COLLECTION).findOneAndReplace(
-// 		{channel_id: 'bumblebee-icecream-a55hv'},
-// 		Object.assign({channel_id: 'bumblebee-icecream-a55hv'}, games_body)
-// 	);
+	/*db.collection(CHANNELS_COLLECTION).findOneAndUpdate(
+		{ channel_id: 'patchy-2q3gHOocK' },
+		{ $set : {users: []} }
+	);
+	db.collection(GAMECODES_COLLECTION).findOneAndUpdate(
+		{ channel_id: 'patchy-2q3gHOocK' },
+		{ $set : {activated_count:0} }
+	);*/
 
-// 	db.collection(CHANNELS_COLLECTION).findOneAndUpdate(
-// 		{ channel_id: 'fighter-pomade-htg52' },
-// 		{ $set : {users: []} }
-// 	);
-// 	db.collection(GAMECODES_COLLECTION).findOneAndUpdate(
-// 		{ channel_id: 'fighter-pomade-htg52' },
-// 		{ $set : {activated_count:0} }
-// 	);
-
-// 	db.collection(GAMES_COLLECTION).findOneAndReplace(
-// 		{channel_id: 'fighter-pomade-htg52'},
-// 		Object.assign({channel_id : 'fighter-pomade-htg52'}, games_body)
-// 	);
-// 	// console.log(Object.assign({channel_id : 'fighter-pomade-htg52'}, games_body));
-// 	res.send('all ok!');
-// });
+	await db.collection(GAMES_COLLECTION).findOneAndReplace(
+		{channel_id: 'Dkp1JSOric'},
+		Object.assign({channel_id: 'Dkp1JSOric'}, games_body)
+	);
+	res.send('all ok!');
+});
 
 /**
  * "/admin/generate"
  * GET: generates channels, gameCodes and games
  */
 
-app.get("/admin/generate", function(req,res) {
+app.get("/admin/generate", async function(req,res) {
 
 	var games_body = {
 		"round_1": {
@@ -353,9 +311,9 @@ app.get("/admin/generate", function(req,res) {
 	 'beast', 'xmen', 'professor', 'xavier', 'arthur', 'merlin', 'lancelot', 'percival','gawain', 'geraint', 'luke',
 	 'skywalker', 'yoda', 'vader', 'anakin', 'obi-wan', 'kenobi', 'leia', 'han-solo', 'chewbacca', 'cookie', 'clone-trooper',
 	 'r2d2', 'boba-fett', 'jaba', 'storm-trooper', 'ahsoka', 'banana', 'pineapple', 'grapefruit', 'kamehameha', 'goku',
-	 'naruto', 'ice-ice', 'britney' 
-	] 
-	for(var i = 0; i < 10; i++) {
+	 'naruto', 'ice-ice', 'britney'
+	]
+	for(var i = 0; i < 30; i++) {
 		var gameCode = faker.random.arrayElement(words) + "-" + shortid.generate();
 		var channel_id = shortid.generate();
 
@@ -370,19 +328,18 @@ app.get("/admin/generate", function(req,res) {
 			users : []
 		}
 
-		var game = Object.assign({channel_id : channel_id}, games_body); 
+		var game = Object.assign({channel_id : channel_id}, games_body);
 
-		db.collection(GAMECODES_COLLECTION).insert(gameCodeObj);
-		db.collection(CHANNELS_COLLECTION).insert(channeObj);
-		db.collection(GAMES_COLLECTION).insert(game);
+		await db.collection(GAMECODES_COLLECTION).insertOne(gameCodeObj);
+		await db.collection(CHANNELS_COLLECTION).insertOne(channeObj);
+		await db.collection(GAMES_COLLECTION).insertOne(game);
 	}
 	res.send("it works!");
-}); 
+});
 
 /**
  * "/admin/"
  */
-
 
 /* "/api/rounds/channel/:channel_id"
  * 	GET: find game data for all rounds, for all users by channel

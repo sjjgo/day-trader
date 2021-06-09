@@ -1,51 +1,56 @@
-import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Headers, RequestOptions } from '@angular/http';	
+import { throwError as observableThrowError, Observable } from "rxjs";
 
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-import * as GLOBAL from '../globals';
+import { catchError } from "rxjs/operators";
+import { Injectable } from "@angular/core";
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+} from "@angular/common/http";
+import { environment } from "../../environments/environment";
 
 @Injectable()
 export class GameService {
-	private hostname = GLOBAL.hostname; 
+  private hostname = environment.hostname;
 
-	constructor (private http: Http) {}
+  constructor(private http: HttpClient) {}
 
-	saveResults(user_id, ind_investment, grp_investment, channel_id, round): Observable<object> {
-		var r = round + 1;
-		var url = "/api/game/" + channel_id + '/' + r;
-		let headers = new Headers({ 'Content-Type': 'application/json' });
-		let options = new RequestOptions({ headers: headers });
-		let body = {
-			"ind" : ind_investment,
-			"grp" : grp_investment,
-			"user_id" : user_id
-		};
-		// console.log('fired');
-		return this.http
-			.post(this.hostname + url, body, options)
-		  .map(function() {return {value:true}})
-		  .catch(this.handleError);
-	}
+  saveResults(
+    user_id,
+    ind_investment,
+    grp_investment,
+    channel_id,
+    round
+  ): Observable<object> {
+    var r = round + 1;
+    var url = "/api/game/" + channel_id + "/" + r;
+    let options = {
+      headers: new HttpHeaders({ "Content-Type": "application/json" }),
+    };
+    let body = {
+      ind: ind_investment,
+      grp: grp_investment,
+      user_id: user_id,
+    };
+    // console.log('fired');
+    return this.http
+      .post(this.hostname + url, body, options)
+      .pipe(catchError(this.handleError));
+  }
 
-	private extractData(res: Response) {
-		let body = res.json();
-		return body || {};
-	}
+  private extractData(res: Response) {
+    let body = res.json();
+    return body || {};
+  }
 
-	private handleError(error: Response | any) {
-		let errMsg: string;
-		if (error instanceof Response) {
-			const body = error.json() || '';
-			const err = body.error || JSON.stringify(body);
-			errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-		}
-		else {
-			errMsg = error.message ? error.message : error.toString();
-		}
-		console.log(errMsg);
-		return Observable.throw(errMsg);
-	}
+  private handleError(error: HttpErrorResponse | any) {
+    let errMsg: string;
+    if (error instanceof HttpErrorResponse) {
+      errMsg = error.name + " " + error.message + " " + error.error;
+    } else {
+      errMsg = error.message ? error.message : error.toString();
+    }
+    console.log(errMsg);
+    return observableThrowError(errMsg);
+  }
 }

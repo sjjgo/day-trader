@@ -1,21 +1,17 @@
 nav {
-	background-color: #3b5998;
+  background-color: #3b5998;
 }
 
-nav>div>a,
-nav>div>a:hover {
-	color: white;
-	text-decoration: none;
+nav > div > a,
+nav > div > a:hover {
+  color: white;
+  text-decoration: none;
 }
 
 .content {
-	padding-top: 3vh;
-	line-height: 1.5em;
-
+  padding-top: 3vh;
+  line-height: 1.5em;
 }
- .container {
- 	height: 100vh;
- }
-
-
-
+.container {
+  height: 100vh;
+}

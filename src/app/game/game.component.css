@@ -1,24 +1,22 @@
 input[type="text"],
-button[type=submit]{
-	margin-top: 0.6vh;
-	height: 4em;
+button[type="submit"] {
+  margin-top: 0.6vh;
+  height: 4em;
 }
-button[type=submit] {
-	color: #1E1E1E;
+button[type="submit"] {
+  color: #1e1e1e;
 }
 form {
-	margin-top: 0.6vh;
+  margin-top: 0.6vh;
 }
 
-
 hr {
-	width: 66.7vw;
+  width: 66.7vw;
 }
 
 .header {
-	margin-bottom: 30px;
+  margin-bottom: 30px;
 }
 
 .submitted-feedback {
-	
 }
